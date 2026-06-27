@@ -1,0 +1,12 @@
+chromadb
+sentence-transformers
+transformers
+torch
+pymupdf
+python-docx
+huggingface_hub
+fastapi
+uvicorn
+python-multipart
+python-dotenv
+langchain-text-splitters
