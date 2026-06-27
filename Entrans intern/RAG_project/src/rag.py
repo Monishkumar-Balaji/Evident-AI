@@ -2,6 +2,7 @@
 from retriever import search
 from prompt import build_prompt
 from generator import generate
+from confidence import calculate_confidence
 
 # Maximum acceptable distance from ChromaDB
 # Lower = more similar
@@ -47,8 +48,10 @@ def ask(question):
 
     # Generate answer
     answer = generate(prompt)
+    confidence = calculate_confidence(filtered_chunks)
 
     return {
         "answer": answer,
-        "sources": filtered_chunks
+        "sources": filtered_chunks,
+        "confidence": confidence
     }

@@ -2,6 +2,7 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import re
 from preprocessor import clean_text
+from pathlib import Path
 
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=350,
@@ -18,8 +19,8 @@ splitter = RecursiveCharacterTextSplitter(
 )
 
 
-def create_chunks(pages):
-    chunk_counter = 0
+def create_chunks(pages, source_file):
+    chunk_id = 0
     chunks = []
 
     for page_data in pages:
@@ -32,10 +33,11 @@ def create_chunks(pages):
             chunk_counter += 1
 
             chunks.append({
-                "id": chunk_counter,
+                "id": chunk_id,
                 "page": page,
-                "chunk": chunk_counter,
+                "chunk": chunk_id,
                 "length": len(chunk),
+                "source": Path(source_file).name,
                 "text": chunk
             })
 

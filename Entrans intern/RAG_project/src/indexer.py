@@ -1,10 +1,9 @@
 from pathlib import Path
-
 from parser import extract_pdf_text
 from chunker import create_chunks
 from embedder import generate_embeddings
-from vectordb import store_chunks
-
+from vectordb import delete_document, store_chunks
+from document_registry import (is_document_changed,update_registry)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -19,11 +18,16 @@ def index_document(pdf_path):
 
     print("Extracting text...")
 
+    if not is_document_changed(pdf_path):
+        print("\nDocument already indexed.")
+        print("No changes detected.")
+        return
+
     pages = extract_pdf_text(str(pdf_path))
 
     print("Creating chunks...")
 
-    chunks = create_chunks(pages)
+    chunks = create_chunks(pages, pdf_path)
 
     print(f"Created {len(chunks)} chunks")
 
@@ -34,7 +38,13 @@ def index_document(pdf_path):
     embeddings = generate_embeddings(texts)
 
     print("Storing into ChromaDB...")
-
+    delete_document(Path(pdf_path).name)
     store_chunks(chunks, embeddings)
+
+    update_registry(
+        pdf_path,
+        pages=len(pages),
+        chunks=len(chunks)
+    )
 
     print("✅ Document indexed successfully.")

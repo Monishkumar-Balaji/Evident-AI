@@ -31,6 +31,13 @@ while True:
 
             print(result["answer"])
 
+            print("\nConfidence")
+
+            print(
+                f"{result['confidence']['score']}% "
+                f"({result['confidence']['level']})"
+            )
+
             print("\nSources:")
 
             if len(result["sources"]) == 0:

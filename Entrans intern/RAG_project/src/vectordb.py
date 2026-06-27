@@ -25,7 +25,8 @@ def store_chunks(chunks, embeddings):
         metadatas.append({
             "page": chunk["page"],
             "chunk": chunk["chunk"],
-            "length": chunk["length"]
+            "length": chunk["length"],
+            "source": chunk["source"]
         })
 
     collection.add(
@@ -34,3 +35,16 @@ def store_chunks(chunks, embeddings):
         metadatas=metadatas,
         embeddings=embeddings.tolist()
     )
+
+def delete_document(source):
+
+    results = collection.get(
+        where={"source": source}
+    )
+
+    if results["ids"]:
+        collection.delete(
+            ids=results["ids"]
+        )
+
+        print(f"Deleted old vectors for {source}")
