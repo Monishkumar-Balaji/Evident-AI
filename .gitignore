@@ -1,0 +1,6 @@
+.venv
+.env
+ideas.md
+PROJECT_STATUS.md
+_pycache_
+uploads
