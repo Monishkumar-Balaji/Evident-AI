@@ -1,8 +1,10 @@
 # config.py
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+load_dotenv(PROJECT_ROOT / ".env")
 
 HF_TOKEN = os.getenv("HF_TOKEN")
 
@@ -10,7 +12,7 @@ EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 
 COLLECTION_NAME = "documents"
 
-CHROMA_PATH = "../chroma_db"
+CHROMA_PATH = str(PROJECT_ROOT / "chroma_db")
 
 TOP_K = 3
 

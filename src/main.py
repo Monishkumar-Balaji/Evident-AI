@@ -1,5 +1,6 @@
 from indexer import index_document
 from rag import ask
+from rebuild import collection_status, rebuild_collection
 
 
 while True:

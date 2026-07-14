@@ -1,5 +1,5 @@
 from pathlib import Path
-from parser import extract_pdf_text
+from parser import extract_text
 from chunker import create_chunks
 from embedder import generate_embeddings
 from vectordb import delete_document, store_chunks
@@ -23,7 +23,7 @@ def index_document(pdf_path):
         print("No changes detected.")
         return
 
-    pages = extract_pdf_text(str(pdf_path))
+    pages = extract_text(str(pdf_path))
 
     print("Creating chunks...")
 

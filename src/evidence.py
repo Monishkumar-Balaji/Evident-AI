@@ -22,4 +22,5 @@ def build_evidence(question, chunks):
 
         })
 
-    return evidence
+    return evidence            "source": chunk.get("source"),
+

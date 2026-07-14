@@ -5,6 +5,7 @@ from generator import generate
 from confidence import calculate_confidence
 from evidence import build_evidence
 from hallucination_detector import verify_answer
+from audit import build_audit_trail
 from retrieval_gate import assess_retrieval
 from chunk_filter import filter_chunks
 
@@ -53,6 +54,7 @@ def empty_response(retrieval_quality=None, chunk_filter=None):
         "retrieval_quality": retrieval_quality,
         "chunk_filter": chunk_filter,
         "evidence": [],
+        "audit_trail": [],
         "verification": [],
         "sources": []
     }
@@ -97,6 +99,10 @@ def ask(question):
         answer,
         evidence
     )
+    audit_trail = build_audit_trail(
+        verification,
+        evidence
+    )
 
     confidence = calculate_confidence(
         filtered_chunks,
@@ -112,5 +118,6 @@ def ask(question):
         "chunk_filter": chunk_filter_report,
         "evidence": evidence,
         "verification": verification,
-        "sources": filtered_chunks
+        "sources": filtered_chunks,
+        "audit_trail": audit_trail,
     }

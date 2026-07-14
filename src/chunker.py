@@ -20,7 +20,7 @@ splitter = RecursiveCharacterTextSplitter(
 
 
 def create_chunks(pages, source_file):
-    chunk_id = 0
+    chunk_id = -1
     chunks = []
 
     for page_data in pages:
@@ -30,7 +30,7 @@ def create_chunks(pages, source_file):
         split_text = splitter.split_text(text)
 
         for chunk in split_text:
-            chunk_counter += 1
+            chunk_id += 1
 
             chunks.append({
                 "id": chunk_id,

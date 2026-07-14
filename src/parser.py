@@ -27,16 +27,19 @@ def extract_docx_text(docx_path):
     text = "\n".join(
         paragraph.text
         for paragraph in doc.paragraphs
+        if paragraph.text.strip()
     )
 
-    return text
+    return [{"page": 1, "text": text}]
 
 
 def extract_text(file_path):
-    if file_path.endswith(".pdf"):
+    suffix = str(file_path).lower()
+
+    if suffix.endswith(".pdf"):
         return extract_pdf_text(file_path)
 
-    elif file_path.endswith(".docx"):
+    if suffix.endswith(".docx"):
         return extract_docx_text(file_path)
 
     else:

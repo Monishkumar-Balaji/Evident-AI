@@ -1,5 +1,6 @@
 # vectordb.py
 import chromadb
+import hashlib
 from config import CHROMA_PATH, COLLECTION_NAME
 
 client = chromadb.PersistentClient(
@@ -18,7 +19,8 @@ def store_chunks(chunks, embeddings):
 
     for chunk in chunks:
 
-        ids.append(f"chunk_{chunk['id']}")
+        source_key = hashlib.sha256(chunk["source"].encode("utf-8")).hexdigest()[:16]
+        ids.append(f"{source_key}_chunk_{chunk['id']}")
 
         documents.append(chunk["text"])
 
