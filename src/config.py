@@ -30,4 +30,6 @@ MAX_RETRIEVAL_DISTANCE = 0.85
 
 MIN_CHUNK_FILTER_SCORE = 45
 
-LLM_MODEL = "microsoft/Phi-3-mini-4k-instruct"
+LLM_MODEL = "meta-llama/Llama-3.1-8B-Instruct"
+
+HYBRID_ALPHA = 0.7

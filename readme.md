@@ -1,10 +1,6 @@
 # Advanced Document RAG Project
 
-This project is a document question-answering system built with a full Retrieval-Augmented Generation pipeline. It can index PDF and DOCX files, store their embeddings in ChromaDB, retrieve relevant chunks for a user question, generate a grounded answer with a HuggingFace LLM, and show confidence, evidence, verification, and source details.
-
-What makes this project stand out from a normal college RAG project is that it does not simply retrieve the top chunks and pass them to an LLM. It adds multiple safety and quality layers around retrieval, context filtering, evidence extraction, hallucination checking, confidence scoring, and auditability.
-
-## Setup
+## How to start the project
 
 Create a virtual environment:
 
@@ -30,11 +26,27 @@ Create a HuggingFace token and place it in a `.env` file:
 HF_TOKEN=<YOUR-API-TOKEN>
 ```
 
-Run the terminal app:
+Start the backend API server:
 
 ```powershell
-python src\main.py
+python src\server.py
 ```
+
+In a new terminal, start the React frontend:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Open your browser to `http://localhost:5173`.
+
+## Overview
+
+This project is a document question-answering system built with a full Retrieval-Augmented Generation pipeline. It can index PDF and DOCX files, store their embeddings in ChromaDB, retrieve relevant chunks for a user question, generate a grounded answer with a HuggingFace LLM, and show confidence, evidence, verification, and source details.
+
+What makes this project stand out from a normal college RAG project is that it does not simply retrieve the top chunks and pass them to an LLM. It adds multiple safety and quality layers around retrieval, context filtering, evidence extraction, hallucination checking, confidence scoring, and auditability.
 
 ## Project Architecture
 
@@ -58,6 +70,8 @@ rag_project/
 |   |-- document_registry.py       # File hash registry for change detection
 |   |-- indexer.py                 # Document indexing pipeline
 |   |-- retriever.py               # Adaptive vector retrieval
+|   |-- keyword_retriever.py       # BM25 keyword search
+|   |-- hybrid_retriever.py        # Blended vector + BM25 hybrid search
 |   |-- retrieval_gate.py          # Retrieval quality gate
 |   |-- chunk_filter.py            # Chunk scoring, deduplication, and pruning
 |   |-- sentence_extractor.py      # Sentence-level evidence extraction
@@ -68,6 +82,8 @@ rag_project/
 |   |-- evidence.py                # Evidence package builder
 |   |-- audit.py                   # Claim-to-evidence audit trail
 |   |-- rag.py                     # Complete RAG pipeline
+|   |-- rebuild.py                 # Collection rebuild utility logic
+|   |-- rebuild_collection.py      # Interactive DB rebuild CLI
 |   |-- main.py                    # CLI entry point
 |
 |-- tests/
@@ -374,7 +390,7 @@ That extra validation and explainability layer is what makes the project stand o
 - ChromaDB
 - HuggingFace Inference API
 - `BAAI/bge-small-en-v1.5` embeddings
-- `microsoft/Phi-3-mini-4k-instruct` LLM
+- `meta-llama/Llama-3.1-8B-Instruct` LLM
 - PyMuPDF
 - python-docx
 - scikit-learn cosine similarity

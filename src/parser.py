@@ -1,5 +1,6 @@
 # parser.py
 import fitz  # PyMuPDF
+# pyrefly: ignore [missing-import]
 from docx import Document
 
 

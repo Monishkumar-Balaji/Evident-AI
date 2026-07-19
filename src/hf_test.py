@@ -6,18 +6,14 @@ client = InferenceClient(
 )
 
 models = [
-    "microsoft/Phi-3-mini-4k-instruct",
-    "google/gemma-2-2b-it",
     "Qwen/Qwen2.5-7B-Instruct",
-    "meta-llama/Llama-3.2-3B-Instruct"
+    "meta-llama/Llama-3.1-8B-Instruct",
+    "mistralai/Mistral-7B-Instruct-v0.3"
 ]
 
 for model in models:
-
     print(f"\nTesting: {model}")
-
     try:
-
         response = client.chat.completions.create(
             model=model,
             messages=[
@@ -28,12 +24,8 @@ for model in models:
             ],
             max_tokens=30
         )
-
-        print("✅ Works")
+        print("Works!")
         print(response.choices[0].message.content)
-        break
-
     except Exception as e:
-
-        print("❌ Failed")
-        print(e)
+        print("Failed!")
+        print(str(e)[:200])

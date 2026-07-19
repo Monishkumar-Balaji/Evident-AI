@@ -7,6 +7,9 @@ python-docx
 huggingface_hub
 fastapi
 uvicorn
+flask-cors
 python-multipart
 python-dotenv
 langchain-text-splitters
+scikit-learn
+numpy
