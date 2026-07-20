@@ -1,8 +1,6 @@
 # Evident AI 🛡️
 **A Trustworthy Retrieval-Augmented Generation (RAG) System**
 
-Created by **Monishkumar Balaji**
-
 Evident AI is a premium, full-stack Document Q&A assistant that provides answers heavily backed by proven evidence. Built with advanced hallucination detection and a dynamic confidence scoring engine, it ensures you can completely trust the information extracted from your PDFs.
 
 ---
@@ -210,13 +208,17 @@ Uses intelligent splitting strategies (by paragraph, sentence, then word) with o
 ## 📸 Screenshots
 
 - **Main Chat Interface:**
-  `output_screenshots\1.png`
+![Home Screen](output_screenshots/1.png)
 
-  `output_screenshots\2.png`
+![Upload Documents](output_screenshots/2.png)
 
-  `output_screenshots\3.png`
+![Question Answering](output_screenshots/3.png)
 
-  `output_screenshots\4.png`
+![Analysis Dashboard](output_screenshots/4.png)
+
+---
+
+Created by **Monishkumar Balaji**
 
 ---
 
