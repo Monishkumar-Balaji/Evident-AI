@@ -207,7 +207,6 @@ Uses intelligent splitting strategies (by paragraph, sentence, then word) with o
 
 ## 📸 Screenshots
 
-- **Main Chat Interface:**
 ![Home Screen](output_screenshots/1.png)
 
 ![Upload Documents](output_screenshots/2.png)
