@@ -23,7 +23,7 @@ export default function ChatWindow({
   return (
     <div className="flex flex-col h-full">
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-4">
+      <div className="flex-1 overflow-y-auto px-8 py-8">
         {messages.length === 0 && !loading ? (
           <div className="h-full flex flex-col items-center justify-center text-center">
             <div className="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center mb-4">

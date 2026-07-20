@@ -51,7 +51,7 @@ export default function Sidebar({
             </button>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3 mt-2">
             <button
               onClick={onNewChat}
               className="w-full flex items-center gap-2 px-3 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary-dark transition-colors cursor-pointer"

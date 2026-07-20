@@ -119,9 +119,16 @@ def ask_question():
             "evidence_score": source.get("evidence_score", 0),
         })
 
+    raw_confidence = result.get("confidence", {})
+    confidence_data = dict(raw_confidence)
+    if "confidence_score" in confidence_data:
+        confidence_data["score"] = confidence_data["confidence_score"]
+        confidence_data["level"] = confidence_data["confidence_label"]
+        confidence_data["explanation"] = "\n".join(confidence_data.get("reason_messages", []))
+
     response = {
         "answer": result.get("answer", ""),
-        "confidence": result.get("confidence", {}),
+        "confidence": confidence_data,
         "retrieval_quality": result.get("retrieval_quality", {}),
         "verification": {
             "status": verification_status,

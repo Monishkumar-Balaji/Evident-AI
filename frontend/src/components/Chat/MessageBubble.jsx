@@ -79,7 +79,7 @@ export default function MessageBubble({ message, isLast, onShowAnalysis, onRegen
           }`}
         >
           {/* Message content */}
-          <div className={`text-sm leading-relaxed ${isUser ? 'text-white' : 'text-text'}`}>
+          <div className={`text-base leading-relaxed ${isUser ? 'text-white' : 'text-text'}`}>
             {!isUser && isLast && !message.isError ? (
               <TypingText text={message.content} />
             ) : (
@@ -90,54 +90,59 @@ export default function MessageBubble({ message, isLast, onShowAnalysis, onRegen
 
         {/* Assistant message footer */}
         {!isUser && !message.isError && (
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            {/* Confidence */}
-            {message.confidence && (
-              <ConfidenceBadge confidence={message.confidence} />
-            )}
+          <div className="mt-3 flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Confidence */}
+              {message.confidence && (
+                <ConfidenceBadge confidence={message.confidence} />
+              )}
 
-            {/* Sources */}
-            {message.sources?.map((src, i) => (
-              <span key={i} className="inline-flex items-center gap-1 text-xs text-muted bg-accent px-2 py-0.5 rounded-full">
-                <IoDocumentText className="text-primary" />
-                {src.source} p.{src.page}
-              </span>
-            ))}
+              {/* Sources */}
+              {message.sources?.map((src, i) => (
+                <span key={i} className="inline-flex items-center gap-1 text-xs text-muted bg-accent px-2 py-0.5 rounded-full">
+                  <IoDocumentText className="text-primary" />
+                  {src.source} p.{src.page}
+                </span>
+              ))}
 
-            {/* Time */}
-            {message.time_taken && (
-              <span className="inline-flex items-center gap-1 text-xs text-muted">
-                <IoTime /> {message.time_taken}s
-              </span>
-            )}
+              {/* Time */}
+              {message.time_taken && (
+                <span className="inline-flex items-center gap-1 text-xs text-muted">
+                  <IoTime /> {message.time_taken}s
+                </span>
+              )}
+            </div>
 
             {/* Action buttons */}
-            <div className="flex items-center gap-1 ml-auto">
+            <div className="flex items-center gap-3">
               <button
                 onClick={handleCopy}
-                className="p-1.5 text-muted hover:text-primary hover:bg-accent rounded-lg transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-muted hover:text-primary hover:bg-accent rounded-lg transition-all cursor-pointer text-sm font-medium border border-transparent hover:border-border"
                 title="Copy answer"
               >
-                {copied ? <IoCheckmarkCircle className="text-primary text-sm" /> : <IoCopy className="text-sm" />}
+                {copied ? <IoCheckmarkCircle className="text-primary text-base" /> : <IoCopy className="text-base" />}
+                <span>Copy</span>
               </button>
 
               {message.analysis && (
                 <button
                   onClick={() => onShowAnalysis?.(message)}
-                  className="p-1.5 text-muted hover:text-primary hover:bg-accent rounded-lg transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-muted hover:text-primary hover:bg-accent rounded-lg transition-all cursor-pointer text-sm font-medium border border-transparent hover:border-border"
                   title="Show Analysis"
                 >
-                  <IoAnalytics className="text-sm" />
+                  <IoAnalytics className="text-base" />
+                  <span>Show Analysis</span>
                 </button>
               )}
 
               {isLast && onRegenerate && (
                 <button
                   onClick={onRegenerate}
-                  className="p-1.5 text-muted hover:text-primary hover:bg-accent rounded-lg transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-muted hover:text-primary hover:bg-accent rounded-lg transition-all cursor-pointer text-sm font-medium border border-transparent hover:border-border"
                   title="Regenerate"
                 >
-                  <IoRefresh className="text-sm" />
+                  <IoRefresh className="text-base" />
+                  <span>Regenerate</span>
                 </button>
               )}
             </div>

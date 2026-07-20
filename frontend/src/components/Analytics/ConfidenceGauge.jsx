@@ -64,9 +64,18 @@ export default function ConfidenceGauge({ confidence }) {
         </div>
       </div>
 
-      <p className="text-xs text-muted text-center mt-1 max-w-[160px]">
-        {confidence?.explanation || 'No data available'}
-      </p>
+      <div className="text-sm text-left mt-4 w-full flex flex-col gap-1.5 px-2">
+        {confidence?.explanation ? confidence.explanation.split('\n').map((line, idx) => {
+          let colorClass = 'text-muted';
+          if (line.includes('✓')) colorClass = 'text-green-600 font-medium';
+          if (line.includes('⚠')) colorClass = 'text-orange-600 font-medium';
+          return (
+            <div key={idx} className={`leading-snug ${colorClass}`}>
+              {line}
+            </div>
+          );
+        }) : <div className="text-center text-muted">No data available</div>}
+      </div>
     </motion.div>
   );
 }

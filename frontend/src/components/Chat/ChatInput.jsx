@@ -10,7 +10,7 @@ export default function ChatInput({ onSend, onAttach, disabled, hasDocuments }) 
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 150) + 'px';
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 300) + 'px';
     }
   }, [text]);
 
@@ -32,8 +32,8 @@ export default function ChatInput({ onSend, onAttach, disabled, hasDocuments }) 
   };
 
   return (
-    <div className="border-t border-border bg-card p-4">
-      <div className={`flex items-end gap-3 bg-background border border-border rounded-2xl px-4 py-3 transition-all
+    <div className="border-t border-border bg-card p-4 pb-10">
+      <div className={`flex items-end gap-4 bg-background border border-border rounded-2xl px-5 py-4 transition-all
         ${isDisabled ? 'opacity-50' : 'focus-within:border-primary/50 focus-within:shadow-sm'}
       `}>
         <button
@@ -43,7 +43,7 @@ export default function ChatInput({ onSend, onAttach, disabled, hasDocuments }) 
           title="Attach PDF"
           id="attach-pdf-btn"
         >
-          <IoAttach className="text-xl" />
+          <IoAttach className="text-2xl" />
         </button>
 
         <textarea
@@ -57,15 +57,15 @@ export default function ChatInput({ onSend, onAttach, disabled, hasDocuments }) 
               : 'Upload a document first to start asking questions...'
           }
           disabled={isDisabled}
-          rows={1}
-          className="flex-1 resize-none bg-transparent text-text text-sm placeholder:text-muted focus:outline-none disabled:cursor-not-allowed max-h-[150px]"
+          rows={2}
+          className="flex-1 resize-none bg-transparent text-text text-base placeholder:text-muted focus:outline-none disabled:cursor-not-allowed max-h-[300px]"
           id="chat-input"
         />
 
         <button
           onClick={handleSend}
           disabled={isDisabled || !text.trim()}
-          className={`p-2 rounded-xl transition-all cursor-pointer
+          className={`p-3 rounded-xl transition-all cursor-pointer
             ${text.trim() && !isDisabled
               ? 'bg-primary text-white hover:bg-primary-dark shadow-sm'
               : 'bg-border text-muted cursor-not-allowed'
@@ -73,7 +73,7 @@ export default function ChatInput({ onSend, onAttach, disabled, hasDocuments }) 
           title="Send message"
           id="send-btn"
         >
-          <IoSend className="text-sm" />
+          <IoSend className="text-lg" />
         </button>
       </div>
 

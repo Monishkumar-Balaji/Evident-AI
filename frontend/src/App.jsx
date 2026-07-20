@@ -129,85 +129,87 @@ export default function App() {
 
   // Main three-column chat layout
   return (
-    <div className="h-screen flex bg-background">
-      {/* Mobile header */}
-      <div className="fixed top-0 left-0 right-0 h-14 bg-card border-b border-border flex items-center px-4 z-30 md:hidden">
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="p-2 text-muted hover:text-text cursor-pointer"
-        >
-          <IoMenu className="text-xl" />
-        </button>
-        <span className="text-sm font-semibold text-primary ml-2">Evident AI</span>
-        <button
-          onClick={() => setAnalyticsOpen(true)}
-          className="ml-auto p-2 text-muted hover:text-text text-xs cursor-pointer"
-        >
-          Analytics
-        </button>
-      </div>
+    <div className="h-screen flex bg-[#EAEEE8] p-4 lg:p-6 pb-6 lg:pb-8">
+      <div className="w-full h-full flex bg-background rounded-2xl lg:rounded-3xl shadow-xl border border-border relative overflow-hidden">
+        {/* Mobile header */}
+        <div className="absolute top-0 left-0 right-0 h-14 bg-card border-b border-border flex items-center px-4 z-30 md:hidden">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 text-muted hover:text-text cursor-pointer"
+          >
+            <IoMenu className="text-xl" />
+          </button>
+          <span className="text-sm font-semibold text-primary ml-2">Evident AI</span>
+          <button
+            onClick={() => setAnalyticsOpen(true)}
+            className="ml-auto p-2 text-muted hover:text-text text-xs cursor-pointer"
+          >
+            Analytics
+          </button>
+        </div>
 
-      {/* Sidebar */}
-      <div className="hidden md:block w-1/4 min-w-[240px] max-w-[300px]">
-        <Sidebar
-          documents={documents}
-          groupedHistory={groupedHistory}
-          activeConversationId={activeConversationId}
-          onNewChat={startNewChat}
-          onSelectConversation={selectConversation}
-          onClearConversation={clearConversation}
-          onUploadClick={() => setShowUploadModal(true)}
-          onRemoveDocument={remove}
-          isOpen={true}
-          onClose={() => {}}
-        />
-      </div>
+        {/* Sidebar */}
+        <div className="hidden md:block w-1/4 min-w-[240px] max-w-[300px]">
+          <Sidebar
+            documents={documents}
+            groupedHistory={groupedHistory}
+            activeConversationId={activeConversationId}
+            onNewChat={startNewChat}
+            onSelectConversation={selectConversation}
+            onClearConversation={clearConversation}
+            onUploadClick={() => setShowUploadModal(true)}
+            onRemoveDocument={remove}
+            isOpen={true}
+            onClose={() => {}}
+          />
+        </div>
 
-      {/* Mobile sidebar */}
-      <div className="md:hidden">
-        <Sidebar
-          documents={documents}
-          groupedHistory={groupedHistory}
-          activeConversationId={activeConversationId}
-          onNewChat={() => { startNewChat(); setSidebarOpen(false); }}
-          onSelectConversation={(id) => { selectConversation(id); setSidebarOpen(false); }}
-          onClearConversation={clearConversation}
-          onUploadClick={() => { setShowUploadModal(true); setSidebarOpen(false); }}
-          onRemoveDocument={remove}
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-        />
-      </div>
+        {/* Mobile sidebar */}
+        <div className="md:hidden">
+          <Sidebar
+            documents={documents}
+            groupedHistory={groupedHistory}
+            activeConversationId={activeConversationId}
+            onNewChat={() => { startNewChat(); setSidebarOpen(false); }}
+            onSelectConversation={(id) => { selectConversation(id); setSidebarOpen(false); }}
+            onClearConversation={clearConversation}
+            onUploadClick={() => { setShowUploadModal(true); setSidebarOpen(false); }}
+            onRemoveDocument={remove}
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
+          />
+        </div>
 
-      {/* Chat Window */}
-      <div className="flex-1 flex flex-col min-w-0 md:border-x border-border mt-14 md:mt-0">
-        <ChatWindow
-          messages={messages}
-          loading={loading}
-          hasDocuments={hasDocuments}
-          onSend={sendMessage}
-          onAttach={handleAttach}
-          onShowAnalysis={handleShowAnalysis}
-          onRegenerate={handleRegenerate}
-        />
-      </div>
+        {/* Chat Window */}
+        <div className="flex-1 flex flex-col min-w-0 md:border-x border-border mt-14 md:mt-0">
+          <ChatWindow
+            messages={messages}
+            loading={loading}
+            hasDocuments={hasDocuments}
+            onSend={sendMessage}
+            onAttach={handleAttach}
+            onShowAnalysis={handleShowAnalysis}
+            onRegenerate={handleRegenerate}
+          />
+        </div>
 
-      {/* Analytics Panel (desktop) */}
-      <div className="hidden lg:block w-1/4 min-w-[260px] max-w-[320px]">
-        <AnalyticsPanel
-          message={lastAssistantMessage}
-          isOpen={true}
-          onClose={() => {}}
-        />
-      </div>
+        {/* Analytics Panel (desktop) */}
+        <div className="hidden lg:block w-1/4 min-w-[260px] max-w-[320px]">
+          <AnalyticsPanel
+            message={lastAssistantMessage}
+            isOpen={true}
+            onClose={() => {}}
+          />
+        </div>
 
-      {/* Analytics Panel (mobile) */}
-      <div className="lg:hidden">
-        <AnalyticsPanel
-          message={lastAssistantMessage}
-          isOpen={analyticsOpen}
-          onClose={() => setAnalyticsOpen(false)}
-        />
+        {/* Analytics Panel (mobile) */}
+        <div className="lg:hidden">
+          <AnalyticsPanel
+            message={lastAssistantMessage}
+            isOpen={analyticsOpen}
+            onClose={() => setAnalyticsOpen(false)}
+          />
+        </div>
       </div>
 
       {/* Analysis Drawer */}

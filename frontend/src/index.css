@@ -20,8 +20,8 @@
 
 /* ── Base Styles ── */
 * {
-  margin: 0;
-  padding: 0;
+  margin: 1;
+  padding: 1px;
   box-sizing: border-box;
 }
 
@@ -34,6 +34,7 @@ body {
   font-family: var(--font-family-sans);
   background-color: var(--color-background);
   color: var(--color-text);
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

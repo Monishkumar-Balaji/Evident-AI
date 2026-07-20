@@ -30,7 +30,7 @@ STRICT RULES:
 "I could not find this information in the uploaded documents."
 
 6. Keep the answer concise and accurate.
-7. At the end of the answer, mention the page number(s) you used.
+7. At the end of the answer, mention the page number(s) you used in exactly this format: "Page: [page_number]". DO NOT mention the "Document Chunk" number or any other internal metadata.
 
 ========================
 CONTEXT

@@ -41,14 +41,16 @@ def empty_response(retrieval_quality=None, chunk_filter=None):
     return {
         "answer": "I could not find this information in the uploaded documents.",
         "confidence": {
-            "score": 0,
-            "level": "NONE",
-            "explanation": retrieval_quality["reason"],
-            "components": {
-                "best_retrieval": 0,
-                "average_retrieval": 0,
+            "confidence_score": 0,
+            "confidence_label": "NONE",
+            "reason_codes": ["no_retrieval"],
+            "reason_messages": [retrieval_quality["reason"]],
+            "score_breakdown": {
+                "verification": 0,
+                "retrieval": 0,
                 "evidence": 0,
-                "verification": 0
+                "supported_claims": 0,
+                "retrieval_quality": 0
             }
         },
         "retrieval_quality": retrieval_quality,
