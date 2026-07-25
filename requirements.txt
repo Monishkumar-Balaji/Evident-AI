@@ -5,11 +5,10 @@ torch
 pymupdf
 python-docx
 huggingface_hub
-fastapi
-uvicorn
+flask
 flask-cors
-python-multipart
+gunicorn
 python-dotenv
 langchain-text-splitters
 scikit-learn
-numpy
+numpy
