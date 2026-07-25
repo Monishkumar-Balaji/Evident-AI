@@ -35,7 +35,7 @@ def store_chunks(chunks, embeddings):
         ids=ids,
         documents=documents,
         metadatas=metadatas,
-        embeddings=embeddings.tolist()
+        embeddings=embeddings if isinstance(embeddings, list) else embeddings.tolist()
     )
 
 def delete_document(source):

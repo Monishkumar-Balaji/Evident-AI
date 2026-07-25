@@ -24,7 +24,7 @@ def hybrid_search(query, top_k=None):
     query_embedding = generate_embeddings([query])[0]
     
     vector_results = collection.query(
-        query_embeddings=[query_embedding.tolist()],
+        query_embeddings=[query_embedding if isinstance(query_embedding, list) else query_embedding.tolist()],
         n_results=top_k
     )
     

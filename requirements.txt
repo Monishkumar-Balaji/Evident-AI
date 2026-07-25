@@ -9,4 +9,3 @@ python-dotenv
 langchain-text-splitters
 scikit-learn
 numpy
-sentence-transformers

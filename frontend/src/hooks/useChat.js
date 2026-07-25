@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
-import { askQuestion } from '../services/api';
+import { askQuestion } from '../api';
 
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);

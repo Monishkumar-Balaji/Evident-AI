@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { getDocuments, uploadDocuments, deleteDocument } from '../services/api';
+import { getDocuments, uploadDocuments, deleteDocument } from '../api';
 
 export function useDocuments() {
   const [documents, setDocuments] = useState([]);
@@ -24,6 +24,12 @@ export function useDocuments() {
     try {
       setUploadProgress('indexing');
       const data = await uploadDocuments(files);
+      
+      const failedDoc = data.documents?.find(doc => doc.status === 'error');
+      if (failedDoc) {
+        throw new Error(failedDoc.message);
+      }
+      
       setUploadProgress('ready');
 
       await fetchDocuments();
@@ -35,7 +41,7 @@ export function useDocuments() {
 
       return data;
     } catch (err) {
-      setError(err.response?.data?.message || 'Upload failed');
+      setError(err.response?.data?.message || err.message || 'Upload failed');
       setUploading(false);
       setUploadProgress(null);
       throw err;
