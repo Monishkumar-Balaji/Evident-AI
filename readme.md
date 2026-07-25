@@ -90,10 +90,7 @@ rag_project/
 |   |-- evidence.py                # Evidence package builder
 |   |-- audit.py                   # Claim-to-evidence audit trail
 |   |-- rag.py                     # Complete RAG pipeline
-|   |-- rebuild.py                 # Collection rebuild utility logic
-|   |-- rebuild_collection.py      # Interactive DB rebuild CLI
 |   |-- server.py                  # Flask API Entry point
-|   |-- main.py                    # CLI entry point
 |
 |-- tests/
 |
@@ -191,8 +188,8 @@ Calculates SHA-256 hashes of uploaded files. Avoids wasting time and resources b
 **11. Persistent ChromaDB Vector Store**
 Acts as a true knowledge base. Vectors are saved locally and persistently across sessions without needing to re-process PDFs on every startup.
 
-**12. Rebuild and Legacy Metadata Checks**
-Includes developer CLI tools for inspecting the vector database health, safely wiping it, and performing clean rebuilds.
+**12. API-Based Document Management**
+Provides backend API endpoints to programmatically manage, delete, and interact with the vector database directly from the frontend, replacing previous legacy CLI tools.
 
 **13. Strict Grounded Prompting**
 Employs zero-temperature settings and strict prompt engineering rules to bind the LLM entirely to the provided context, completely restricting outside knowledge.
