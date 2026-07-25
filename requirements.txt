@@ -1,7 +1,4 @@
 chromadb
-sentence-transformers
-transformers
-torch
 pymupdf
 python-docx
 huggingface_hub
@@ -12,3 +9,4 @@ python-dotenv
 langchain-text-splitters
 scikit-learn
 numpy
+sentence-transformers
