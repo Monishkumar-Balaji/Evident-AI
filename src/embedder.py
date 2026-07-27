@@ -12,25 +12,35 @@ client = InferenceClient(
 )
 
 
-def generate_embeddings(texts):
+def generate_embeddings(texts, batch_size=10):
     if not texts:
         return []
 
-    embeddings = client.feature_extraction(
-        texts,
-        model=EMBEDDING_MODEL
-    )
+    all_embeddings = []
 
-    embeddings = np.asarray(embeddings, dtype=np.float32)
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i:i + batch_size]
 
-    # Single text may return a 1-D vector
-    if embeddings.ndim == 1:
-        embeddings = embeddings.reshape(1, -1)
+        embeddings = client.feature_extraction(
+            batch,
+            model=EMBEDDING_MODEL
+        )
 
-    # Normalize each embedding
-    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
-    norms[norms == 0] = 1
+        embeddings = np.asarray(embeddings, dtype=np.float32)
 
-    embeddings = embeddings / norms
+        if embeddings.ndim == 1:
+            embeddings = embeddings.reshape(1, -1)
 
-    return embeddings.tolist()
+        # Normalize each embedding
+        norms = np.linalg.norm(
+            embeddings,
+            axis=1,
+            keepdims=True
+        )
+        norms[norms == 0] = 1
+
+        embeddings = embeddings / norms
+
+        all_embeddings.extend(embeddings.tolist())
+
+    return all_embeddings
