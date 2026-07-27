@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { IoShieldCheckmark, IoAdd, IoCloudUpload, IoChatbubbleEllipses, IoTrash, IoClose } from 'react-icons/io5';
+import { IoShieldCheckmark, IoAdd, IoCloudUpload, IoChatbubbleEllipses, IoTrash, IoClose, IoLogoGithub } from 'react-icons/io5';
 import DocumentChip from '../common/DocumentChip';
 
 export default function Sidebar({
@@ -121,8 +121,8 @@ export default function Sidebar({
         </div>
 
         {/* Footer */}
-        {activeConversationId && (
-          <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border flex flex-col gap-3 mt-auto">
+          {activeConversationId && (
             <button
               onClick={onClearConversation}
               className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm text-danger hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
@@ -131,8 +131,19 @@ export default function Sidebar({
               <IoTrash className="text-sm" />
               Clear Conversation
             </button>
-          </div>
-        )}
+          )}
+
+          <a
+            href="https://github.com/Monishkumar-Balaji/Evident-AI"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 text-muted hover:text-text text-sm transition-colors cursor-pointer"
+            id="github-code-link"
+          >
+            <IoLogoGithub className="text-base" />
+            <span>GitHub Source</span>
+          </a>
+        </div>
       </motion.aside>
     </>
   );

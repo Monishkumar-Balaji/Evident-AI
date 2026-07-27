@@ -1,18 +1,29 @@
 # vectordb.py
 import chromadb
 import hashlib
+import re
 from config import CHROMA_PATH, COLLECTION_NAME
 
 client = chromadb.PersistentClient(
     path=CHROMA_PATH
 )
 
-collection = client.get_or_create_collection(
-    name=COLLECTION_NAME
-)
+def clean_session_name(session_id):
+    if not session_id:
+        return COLLECTION_NAME
+    # Ensure collection name is safe (lowercase, alphanumeric, underscores, hyphens)
+    clean = re.sub(r'[^a-z0-9_-]', '', session_id.lower())
+    if len(clean) < 3:
+        clean = f"session_{clean}"
+    return clean[:63]
 
 
-def store_chunks(chunks, embeddings):
+def get_collection(session_id=None):
+    name = clean_session_name(session_id)
+    return client.get_or_create_collection(name=name)
+
+
+def store_chunks(chunks, embeddings, session_id=None):
     ids = []
     documents = []
     metadatas = []
@@ -31,6 +42,7 @@ def store_chunks(chunks, embeddings):
             "source": chunk["source"]
         })
 
+    collection = get_collection(session_id)
     collection.add(
         ids=ids,
         documents=documents,
@@ -38,8 +50,8 @@ def store_chunks(chunks, embeddings):
         embeddings=embeddings if isinstance(embeddings, list) else embeddings.tolist()
     )
 
-def delete_document(source):
-
+def delete_document(source, session_id=None):
+    collection = get_collection(session_id)
     results = collection.get(
         where={"source": source}
     )
@@ -49,4 +61,4 @@ def delete_document(source):
             ids=results["ids"]
         )
 
-        print(f"Deleted old vectors for {source}")
+        print(f"Deleted old vectors for {source} in session {session_id}")

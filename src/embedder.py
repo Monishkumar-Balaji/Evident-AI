@@ -1,3 +1,4 @@
+# embedder.py
 from huggingface_hub import InferenceClient
 from config import EMBEDDING_MODEL, HF_TOKEN
 import numpy as np
@@ -6,30 +7,30 @@ print("Using Hugging Face remote embedding API...")
 
 client = InferenceClient(
     provider="hf-inference",
-    api_key=HF_TOKEN
+    api_key=HF_TOKEN,
+    timeout=60
 )
 
 
 def generate_embeddings(texts):
-    embeddings = []
+    if not texts:
+        return []
 
-    for text in texts:
-        embedding = client.feature_extraction(
-            text,
-            model=EMBEDDING_MODEL
-        )
+    embeddings = client.feature_extraction(
+        texts,
+        model=EMBEDDING_MODEL
+    )
 
-        embedding = np.asarray(embedding, dtype=np.float32)
+    embeddings = np.asarray(embeddings, dtype=np.float32)
 
-        # Ensure a single 1-D embedding
-        if embedding.ndim > 1:
-            embedding = embedding.mean(axis=0)
+    # Single text may return a 1-D vector
+    if embeddings.ndim == 1:
+        embeddings = embeddings.reshape(1, -1)
 
-        # Normalize like SentenceTransformer(normalize_embeddings=True)
-        norm = np.linalg.norm(embedding)
-        if norm > 0:
-            embedding = embedding / norm
+    # Normalize each embedding
+    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    norms[norms == 0] = 1
 
-        embeddings.append(embedding.tolist())
+    embeddings = embeddings / norms
 
-    return embeddings
+    return embeddings.tolist()

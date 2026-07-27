@@ -17,6 +17,15 @@ from document_registry import load_registry
 UPLOAD_DIR = PROJECT_ROOT / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 
+def get_session_upload_dir(session_id):
+    if not session_id:
+        return UPLOAD_DIR
+    import re
+    clean_session_id = re.sub(r'[^a-z0-9_-]', '', session_id.lower())
+    session_dir = UPLOAD_DIR / clean_session_id
+    session_dir.mkdir(exist_ok=True)
+    return session_dir
+
 app = Flask(__name__)
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
@@ -29,6 +38,7 @@ CORS(app, origins=[
 @app.route("/api/upload", methods=["POST"])
 def upload_documents():
     """Accept one or more PDF files, save them to uploads/, and index each."""
+    session_id = request.headers.get("X-Session-ID")
     if "files" not in request.files:
         return jsonify({"status": "error", "message": "No files provided"}), 400
 
@@ -37,6 +47,7 @@ def upload_documents():
         return jsonify({"status": "error", "message": "No files selected"}), 400
 
     results = []
+    session_upload_dir = get_session_upload_dir(session_id)
 
     for file in files:
         if not file.filename:
@@ -51,13 +62,13 @@ def upload_documents():
             })
             continue
 
-        save_path = UPLOAD_DIR / filename
+        save_path = session_upload_dir / filename
         file.save(str(save_path))
 
         try:
-            index_document(save_path)
+            index_document(save_path, session_id=session_id)
 
-            registry = load_registry()
+            registry = load_registry(session_id=session_id)
             doc_info = registry.get(filename, {})
 
             results.append({
@@ -84,6 +95,7 @@ def upload_documents():
 @app.route("/api/ask", methods=["POST"])
 def ask_question():
     """Run the full RAG pipeline for a question and return JSON."""
+    session_id = request.headers.get("X-Session-ID")
     data = request.get_json()
     if not data or "question" not in data:
         return jsonify({"status": "error", "message": "No question provided"}), 400
@@ -93,7 +105,7 @@ def ask_question():
         return jsonify({"status": "error", "message": "Question cannot be empty"}), 400
 
     start_time = time.time()
-    result = ask(question)
+    result = ask(question, session_id=session_id)
     elapsed = round(time.time() - start_time, 2)
 
     # Determine overall verification status
@@ -161,7 +173,8 @@ def ask_question():
 @app.route("/api/documents", methods=["GET"])
 def list_documents():
     """List all indexed documents from the registry."""
-    registry = load_registry()
+    session_id = request.headers.get("X-Session-ID")
+    registry = load_registry(session_id=session_id)
 
     documents = []
     for filename, info in registry.items():
@@ -180,19 +193,21 @@ def list_documents():
 @app.route("/api/documents/<name>", methods=["DELETE"])
 def delete_document(name):
     """Remove a document's vectors and registry entry."""
+    session_id = request.headers.get("X-Session-ID")
     from vectordb import delete_document as delete_vectors
     from document_registry import load_registry, save_registry
 
-    registry = load_registry()
+    registry = load_registry(session_id=session_id)
     if name not in registry:
         return jsonify({"status": "error", "message": f"{name} not found"}), 404
 
-    delete_vectors(name)
+    delete_vectors(name, session_id=session_id)
     del registry[name]
-    save_registry(registry)
+    save_registry(registry, session_id=session_id)
 
     # Also remove the file from uploads if it exists
-    upload_path = UPLOAD_DIR / name
+    session_upload_dir = get_session_upload_dir(session_id)
+    upload_path = session_upload_dir / name
     if upload_path.exists():
         upload_path.unlink()
 

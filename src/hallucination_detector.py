@@ -11,7 +11,7 @@ def split_sentences(text):
     """
 
     sentences = re.split(
-        r'(?<=[.!?])\s+',
+        r'(?<=[.!?])\s+(?![a-z])',
         text
     )
 
@@ -22,7 +22,7 @@ def split_sentences(text):
     ]
 
 
-def verify_answer(answer, evidence, threshold=0.75):
+def verify_answer(answer, evidence, threshold=0.70):
     """
     Verify every sentence of the generated answer
     against extracted evidence.
@@ -33,43 +33,38 @@ def verify_answer(answer, evidence, threshold=0.75):
     evidence_sentences = []
 
     for item in evidence:
-
         evidence_sentences.extend(
             sentence["text"]
             for sentence in item["sentences"]
         )
 
-    if not evidence_sentences:
-
+    if not evidence_sentences or not answer_sentences:
         return []
 
-    evidence_embeddings = generate_embeddings(
-        evidence_sentences
+    # Embed evidence + answer sentences in a single API request
+    all_texts = evidence_sentences + answer_sentences
+    all_embeddings = generate_embeddings(all_texts)
+
+    evidence_count = len(evidence_sentences)
+
+    evidence_embeddings = all_embeddings[:evidence_count]
+    answer_embeddings = all_embeddings[evidence_count:]
+
+    # Compare every answer sentence against all evidence sentences
+    similarities = cosine_similarity(
+        answer_embeddings,
+        evidence_embeddings
     )
 
     results = []
 
-    for sentence in answer_sentences:
-
-        sentence_embedding = generate_embeddings(
-            [sentence]
-        )
-
-        similarities = cosine_similarity(
-            sentence_embedding,
-            evidence_embeddings
-        )[0]
-
-        best_score = float(max(similarities))
+    for i, sentence in enumerate(answer_sentences):
+        best_score = float(max(similarities[i]))
 
         results.append({
-
             "sentence": sentence,
-
             "score": round(best_score, 3),
-
             "verified": best_score >= threshold
-
         })
 
     return results

@@ -8,7 +8,7 @@ from document_registry import (is_document_changed,update_registry)
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
-def index_document(pdf_path):
+def index_document(pdf_path, session_id=None):
 
     pdf_path = PROJECT_ROOT / pdf_path
 
@@ -18,7 +18,7 @@ def index_document(pdf_path):
 
     print("Extracting text...")
 
-    if not is_document_changed(pdf_path):
+    if not is_document_changed(pdf_path, session_id=session_id):
         print("\nDocument already indexed.")
         print("No changes detected.")
         return
@@ -38,13 +38,14 @@ def index_document(pdf_path):
     embeddings = generate_embeddings(texts)
 
     print("Storing into ChromaDB...")
-    delete_document(Path(pdf_path).name)
-    store_chunks(chunks, embeddings)
+    delete_document(Path(pdf_path).name, session_id=session_id)
+    store_chunks(chunks, embeddings, session_id=session_id)
 
     update_registry(
         pdf_path,
         pages=len(pages),
-        chunks=len(chunks)
+        chunks=len(chunks),
+        session_id=session_id
     )
 
     print("✅ Document indexed successfully.")

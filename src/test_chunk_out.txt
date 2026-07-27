@@ -1,0 +1,13 @@
+Regex 1 (Original):
+- 'NMIET COLLEGE Operating System 1 UNIT-1 INTRODUCTION INTRODUCTION:  Operating system is a system software that acts as an intermediary between the user of a computer and computer hardware.'
+- ' It is considered as the brain of the computer.'
+- ' It controls the internal activities of the comp.'
+- 'hardware and provides the user interface'
+
+Regex 2 (Current):
+- 'NMIET COLLEGE Operating System 1 UNIT-1 INTRODUCTION INTRODUCTION:  Operating system is a system software that acts as an intermediary between the user of a computer and computer hardware.  It is considered as the brain of the computer.  It controls the internal activities of the comp. hardware and provides the user interface'
+
+Regex 3 (Negative lookahead):
+- 'NMIET COLLEGE Operating System 1 UNIT-1 INTRODUCTION INTRODUCTION:  Operating system is a system software that acts as an intermediary between the user of a computer and computer hardware.'
+- ' It is considered as the brain of the computer.'
+- ' It controls the internal activities of the comp. hardware and provides the user interface'

@@ -1,7 +1,7 @@
 # keyword_retriever.py
 import re
 import math
-from vectordb import collection
+from vectordb import get_collection
 
 class BM25:
     """
@@ -54,24 +54,30 @@ def tokenize(text):
     return re.findall(r"\w+", text.lower())
 
 
-# Global cache for BM25 index and chunk metadata
-_bm25_instance = None
-_cached_ids = set()
-_cached_chunks = []  # List of dictionaries containing chunk details
+# Global caches mapped by session_id
+_bm25_instances = {}
+_cached_ids = {}
+_cached_chunks = {}
 
-def get_bm25_retriever():
+def get_bm25_retriever(session_id=None):
     """
-    Loads/rebuilds the BM25 index and chunk cache dynamically.
+    Loads/rebuilds the BM25 index and chunk cache dynamically per session.
     Checks the document IDs in ChromaDB to determine if the cache is stale.
     """
-    global _bm25_instance, _cached_ids, _cached_chunks
+    global _bm25_instances, _cached_ids, _cached_chunks
+    
+    collection = get_collection(session_id)
     
     # Fast check of collection IDs to determine if collection has changed
     db_records = collection.get(include=[])
     db_ids = db_records.get("ids", [])
     db_ids_set = set(db_ids)
     
-    if _bm25_instance is None or _cached_ids != db_ids_set:
+    session_key = session_id or "default"
+    
+    if (session_key not in _bm25_instances 
+            or _cached_ids.get(session_key) != db_ids_set):
+        
         # Fetch all documents, metadatas, and embeddings from ChromaDB
         full_records = collection.get(include=["documents", "metadatas", "embeddings"])
         
@@ -81,29 +87,30 @@ def get_bm25_retriever():
         embeddings = full_records.get("embeddings", [])
         
         tokenized_corpus = []
-        _cached_chunks = []
+        chunks = []
         
         for idx in range(len(ids)):
             text = documents[idx]
             tokenized_corpus.append(tokenize(text))
-            _cached_chunks.append({
+            chunks.append({
                 "id": ids[idx],
                 "text": text,
                 "metadata": metadatas[idx],
                 "embedding": embeddings[idx]
             })
             
-        _bm25_instance = BM25(tokenized_corpus)
-        _cached_ids = db_ids_set
+        _bm25_instances[session_key] = BM25(tokenized_corpus)
+        _cached_ids[session_key] = db_ids_set
+        _cached_chunks[session_key] = chunks
         
-    return _bm25_instance, _cached_chunks
+    return _bm25_instances[session_key], _cached_chunks[session_key]
 
 
-def keyword_search(query, top_k=5):
+def keyword_search(query, session_id=None, top_k=5):
     """
-    Perform a BM25 keyword search over all documents in the vector database.
+    Perform a BM25 keyword search over all documents in the session-specific vector database.
     """
-    bm25, cached_chunks = get_bm25_retriever()
+    bm25, cached_chunks = get_bm25_retriever(session_id)
     if not cached_chunks:
         return []
         

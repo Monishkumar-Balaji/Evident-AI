@@ -25,7 +25,7 @@ def get_strength(score):
 
 def extract_best_sentences(question, chunk, top_k=2):
     sentences = re.split(
-        r'(?<=[.!?])\s+',
+        r'(?<=[.!?])\s+(?![a-z])',
         chunk
     )
 
@@ -38,13 +38,11 @@ def extract_best_sentences(question, chunk, top_k=2):
     if not sentences:
         return []
 
-    question_embedding = generate_embeddings(
-        [question]
-    )
+    all_texts = [question] + sentences
+    all_embeddings = generate_embeddings(all_texts)
 
-    sentence_embeddings = generate_embeddings(
-        sentences
-    )
+    question_embedding = [all_embeddings[0]]
+    sentence_embeddings = all_embeddings[1:]
 
     similarities = cosine_similarity(
         question_embedding,

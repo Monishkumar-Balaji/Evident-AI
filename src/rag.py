@@ -62,13 +62,13 @@ def empty_response(retrieval_quality=None, chunk_filter=None):
     }
 
 
-def ask(question):
+def ask(question, session_id=None):
     """
     Complete RAG pipeline:
     Retrieve -> Filter -> Generate -> Verify
     """
 
-    retrieved_chunks = search(question)
+    retrieved_chunks = search(question, session_id=session_id)
     retrieval_quality = assess_retrieval(retrieved_chunks)
 
     if not retrieval_quality["should_generate"]:

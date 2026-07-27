@@ -2,14 +2,15 @@
 import numpy as np
 from config import HYBRID_ALPHA, MAX_RETRIEVAL_DISTANCE
 from embedder import generate_embeddings
-from vectordb import collection
+from vectordb import get_collection
 from keyword_retriever import keyword_search
 
-def hybrid_search(query, top_k=None):
+def hybrid_search(query, session_id=None, top_k=None):
     """
     Hybrid search combining ChromaDB semantic search with a custom BM25 keyword search.
     Scores are normalized and merged into a hybrid distance metric.
     """
+    collection = get_collection(session_id)
     num_items = collection.count()
     if num_items == 0:
         return []
@@ -34,7 +35,7 @@ def hybrid_search(query, top_k=None):
     v_distances = vector_results.get("distances", [[]])[0]
     
     # 2. Fetch keyword search results
-    kw_candidates = keyword_search(query, top_k=top_k)
+    kw_candidates = keyword_search(query, session_id=session_id, top_k=top_k)
     
     # 3. Merge candidates and calculate distances
     merged = {}

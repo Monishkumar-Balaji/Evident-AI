@@ -1,9 +1,18 @@
 import json
 import hashlib
+import re
 from pathlib import Path
 
-# Path to documents.json
-REGISTRY_FILE = Path(__file__).resolve().parent.parent / "data" / "documents.json"
+
+def get_registry_file(session_id=None):
+    data_dir = Path(__file__).resolve().parent.parent / "data"
+    if not session_id:
+        return data_dir / "documents.json"
+    
+    registries_dir = data_dir / "registries"
+    registries_dir.mkdir(exist_ok=True)
+    clean_session_id = re.sub(r'[^a-z0-9_-]', '', session_id.lower())
+    return registries_dir / f"registry_{clean_session_id}.json"
 
 
 def calculate_hash(file_path):
@@ -19,22 +28,24 @@ def calculate_hash(file_path):
     return sha.hexdigest()
 
 
-def load_registry():
-    if not REGISTRY_FILE.exists():
+def load_registry(session_id=None):
+    registry_file = get_registry_file(session_id)
+    if not registry_file.exists():
         return {}
 
-    with open(REGISTRY_FILE, "r") as f:
+    with open(registry_file, "r") as f:
         return json.load(f)
 
 
-def save_registry(registry):
-    with open(REGISTRY_FILE, "w") as f:
+def save_registry(registry, session_id=None):
+    registry_file = get_registry_file(session_id)
+    with open(registry_file, "w") as f:
         json.dump(registry, f, indent=4)
 
 
-def is_document_changed(file_path):
+def is_document_changed(file_path, session_id=None):
 
-    registry = load_registry()
+    registry = load_registry(session_id)
 
     file_name = Path(file_path).name
 
@@ -46,9 +57,9 @@ def is_document_changed(file_path):
     return registry[file_name]["hash"] != current_hash
 
 
-def update_registry(file_path, pages, chunks):
+def update_registry(file_path, pages, chunks, session_id=None):
 
-    registry = load_registry()
+    registry = load_registry(session_id)
 
     file_name = Path(file_path).name
 
@@ -58,4 +69,4 @@ def update_registry(file_path, pages, chunks):
         "chunks": chunks
     }
 
-    save_registry(registry)
+    save_registry(registry, session_id)

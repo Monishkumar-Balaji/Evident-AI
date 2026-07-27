@@ -19,9 +19,9 @@ def choose_top_k(query):
     return MAX_TOP_K
 
 
-def search(query, top_k=None):
+def search(query, session_id=None, top_k=None):
     if top_k is None:
         top_k = choose_top_k(query)
 
     from hybrid_retriever import hybrid_search
-    return hybrid_search(query, top_k)
+    return hybrid_search(query, session_id=session_id, top_k=top_k)
