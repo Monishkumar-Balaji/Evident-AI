@@ -52,13 +52,14 @@ def store_chunks(chunks, embeddings, session_id=None):
 
 def delete_document(source, session_id=None):
     collection = get_collection(session_id)
-    results = collection.get(
+
+    collection.delete(
         where={"source": source}
     )
 
-    if results["ids"]:
-        collection.delete(
-            ids=results["ids"]
-        )
+    print(
+        f"Deleted old vectors for {source} in session {session_id}",
+        flush=True
+    )
 
-        print(f"Deleted old vectors for {source} in session {session_id}")
+    
